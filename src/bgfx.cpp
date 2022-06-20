@@ -1835,7 +1835,7 @@ namespace bgfx
 		return NULL;
 	}
 
-	static TextureFormat::Enum s_emulatedFormats[] =
+	static const TextureFormat::Enum s_emulatedFormats[] =
 	{
 		TextureFormat::BC1,
 		TextureFormat::BC2,
@@ -3616,6 +3616,76 @@ namespace bgfx
 		s_threadIndex = 0;
 		g_callback    = NULL;
 		g_allocator   = NULL;
+	}
+
+	struct SuperContext
+	{
+		CallbackStub* callbackStub = NULL;
+		AllocatorStub* allocatorStub = NULL;
+		bool graphicsDebuggerPresent = false;
+
+		CallbackI* callback = NULL;
+		bx::AllocatorI* allocator = NULL;
+
+		Caps caps;
+
+		bgfx::Context* context = nullptr;
+		bool renderFrameCalled = false;
+		bgfx::InternalData internalData;
+		bgfx::PlatformData platformData;
+		bool platformDataChangedSinceReset = false;
+#if BGFX_CONFIG_MULTITHREADED && !defined(BX_THREAD_LOCAL)
+		ThreadData threadIndex = 0;
+#elif !BGFX_CONFIG_MULTITHREADED
+		uint32_t threadIndex = 0;
+#else
+		uint32_t threadIndex = 0;
+#endif
+
+	};
+
+	void* createContext()
+	{
+		BX_ASSERT(s_ctx, "BGFX context is not initialized!");
+		SuperContext* ctx = new SuperContext();
+		ctx->callbackStub = s_callbackStub;
+		ctx->allocatorStub = s_allocatorStub;
+		ctx->graphicsDebuggerPresent = s_graphicsDebuggerPresent;
+		ctx->callback = g_callback;
+		ctx->allocator = g_allocator;
+		ctx->caps = g_caps;
+
+		ctx->context = s_ctx;
+		ctx->renderFrameCalled = s_renderFrameCalled;
+		ctx->internalData = g_internalData;
+		ctx->platformData = g_platformData;
+		ctx->platformDataChangedSinceReset = g_platformDataChangedSinceReset;
+		ctx->threadIndex = s_threadIndex;
+
+		return (void*)ctx;
+	}
+
+	void setContext(void* ctx)
+	{
+		auto superctx = (SuperContext*)ctx;
+		s_callbackStub = superctx->callbackStub;
+		s_allocatorStub = superctx->allocatorStub;
+		g_callback = superctx->callback;
+		s_graphicsDebuggerPresent = superctx->graphicsDebuggerPresent;
+		g_allocator = superctx->allocator;
+		g_caps = superctx->caps;
+
+		s_ctx = superctx->context;
+		s_renderFrameCalled = superctx->renderFrameCalled;
+		g_internalData = superctx->internalData;
+		g_platformData = superctx->platformData;
+		g_platformDataChangedSinceReset = superctx->platformDataChangedSinceReset;
+		s_threadIndex = superctx->threadIndex;
+	}
+
+	void destroyContext(void* ctx)
+	{
+		delete (SuperContext*)ctx;
 	}
 
 	void reset(uint32_t _width, uint32_t _height, uint32_t _flags, TextureFormat::Enum _format)

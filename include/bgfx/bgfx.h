@@ -1975,6 +1975,11 @@ namespace bgfx
 	///
 	void shutdown();
 
+	
+	void* createContext();
+	void setContext(void* ctx);
+	void destroyContext(void* ctx);
+
 	/// Reset graphic settings and back-buffer size.
 	///
 	/// @param[in] _width Back-buffer width.
