@@ -165,4 +165,12 @@ project ("geometryv")
 
 	configuration {}
 
+	-- custom path edits
+	libdirs { "../../../deps" }
+	objdir    "../../../intermediate/"
+    targetdir "../../../tools"
+	
+	configuration { "Release" }
+		targetname "geometryv"
+
 	strip()

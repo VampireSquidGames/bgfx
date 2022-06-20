@@ -50,3 +50,8 @@ project "texturec"
 		}
 
 	configuration {}
+
+	-- custom path edits
+	libdirs { "../../../deps" }
+	objdir    "../../../intermediate/"
+    targetdir "../../../tools"
