@@ -276,6 +276,12 @@ function bgfxProjectBase(_kind, _defines)
 	end
 
 	configuration {}
+
+	-- custom path edits
+	libdirs { "../../../deps" }
+	objdir    "../../../intermediate/"
+    targetdir "../../../deps"
+	
 end
 
 function bgfxProject(_name, _kind, _defines)

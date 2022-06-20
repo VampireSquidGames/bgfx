@@ -19,6 +19,11 @@ project ("example-glue")
 	using_bx()
 
 	configuration {}
+	
+	-- custom path edits
+	libdirs { "../../../deps" }
+	objdir    "../../../intermediate/"
+    targetdir "../../../deps"
 
 project ("example-common")
 	kind "StaticLib"
@@ -96,3 +101,8 @@ project ("example-common")
 		premake.vstudio.splashpath = "../../../examples/runtime/images/SplashScreen.png"
 
 	configuration {}
+
+	-- custom path edits
+	libdirs { "../../../deps" }
+	objdir    "../../../intermediate/"
+    targetdir "../../../deps"

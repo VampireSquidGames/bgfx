@@ -3,7 +3,7 @@
 -- License: https://github.com/bkaradzic/bgfx/blob/master/LICENSE
 --
 
-group "tools/shaderc"
+group "PipelineTools/shaderc"
 
 local GLSL_OPTIMIZER = path.join(BGFX_DIR, "3rdparty/glsl-optimizer")
 local FCPP_DIR       = path.join(BGFX_DIR, "3rdparty/fcpp")
@@ -153,6 +153,11 @@ project "spirv-opt"
 
 	configuration {}
 
+	-- custom path edits
+	libdirs { "../../../deps" }
+	objdir    "../../../intermediate/"
+    targetdir "../../../deps"
+
 project "spirv-cross"
 	kind "StaticLib"
 
@@ -203,6 +208,11 @@ project "spirv-cross"
 		}
 
 	configuration {}
+	
+	-- custom path edits
+	libdirs { "../../../deps" }
+	objdir    "../../../intermediate/"
+    targetdir "../../../deps"
 
 project "glslang"
 	kind "StaticLib"
@@ -305,6 +315,11 @@ project "glslang"
 		}
 
 	configuration {}
+
+	-- custom path edits
+	libdirs { "../../../deps" }
+	objdir    "../../../intermediate/"
+    targetdir "../../../deps"
 
 project "glsl-optimizer"
 	kind "StaticLib"
@@ -557,6 +572,11 @@ project "glsl-optimizer"
 
 	configuration {}
 
+	-- custom path edits
+	libdirs { "../../../deps" }
+	objdir    "../../../intermediate/"
+    targetdir "../../../deps"
+
 project "fcpp"
 	kind "StaticLib"
 
@@ -596,6 +616,11 @@ project "fcpp"
 		}
 
 	configuration {}
+
+	-- custom path edits
+	libdirs { "../../../deps" }
+	objdir    "../../../intermediate/"
+    targetdir "../../../deps"
 
 project "shaderc"
 	kind "ConsoleApp"
@@ -677,6 +702,16 @@ project "shaderc"
 		dofile(path.join(BGFX_DIR, "../bgfx-gnm/scripts/shaderc.lua") )
 	end
 
+	-- custom path edits
+	libdirs { "../../../deps" }
+	objdir    "../../../intermediate/"
+    targetdir "../../../tools"
+
+	configuration { "Developer" }
+		targetname "shadercDev"
+	configuration { "Release" }
+		targetname "shaderc"
+
 	strip()
 
-group "tools"
+group "PipelineTools"
